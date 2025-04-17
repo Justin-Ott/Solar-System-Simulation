@@ -1,7 +1,7 @@
 # Solar System Simulation - CIS 367 Final Project
 
 ## Group Members
-- Justin Ot
+- Justin Ott
 
 ## Project Description
 A 3D interactive model of our solar system built with Three.js and WebGL. Features realistic planet textures, orbital mechanics, and interactive controls.
