@@ -40,7 +40,3 @@ function updatePlanetInfo(planet) {
         <p>Diameter: ${planet.userData.diameter} km</p>
     `;
 }
-
-export function updateUI() {
-    // Could add real-time updates here
-}
