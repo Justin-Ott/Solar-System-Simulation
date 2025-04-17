@@ -23,3 +23,9 @@ A 3D interactive model of our solar system built with Three.js and WebGL. Featur
 - Q/E: Zoom in/out
 - R: Reset view
 - Click planet: Show information
+
+## Image Source
+- https://www.solarsystemscope.com/textures/ 
+
+## glb Source
+- https://nasa3d.arc.nasa.gov/detail/hst-3ds 
