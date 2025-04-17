@@ -1,5 +1,5 @@
 // Local module imports
-import * as THREE from '../lib/three.module.js';
+import * as THREE from './lib/three.module.js';
 // import { OrbitControls } from './lib/OrbitControls.module.js';
 // import { GLTFLoader } from './lib/GLTFLoader.module.js';
 // import Stats from './lib/Stats.module.js';
