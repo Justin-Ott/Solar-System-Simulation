@@ -1,4 +1,3 @@
-// import * as THREE from '../lib/three.module.js';
 import { GLTFLoader } from '../lib/GLTFLoader.module.js';
 
 export function loadSpaceship(scene) {

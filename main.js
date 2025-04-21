@@ -1,8 +1,4 @@
-// Local module imports
 import * as THREE from './lib/three.module.js';
-// import { OrbitControls } from './lib/OrbitControls.module.js';
-// import { GLTFLoader } from './lib/GLTFLoader.module.js';
-// import Stats from './lib/Stats.module.js';
 
 // Local script imports
 import { initCamera, initCameraControls, updateCamera } from './js/camera.js';
@@ -24,41 +20,82 @@ const camera = initCamera(renderer);
 const controls = initCameraControls(camera, renderer);
 createStars(scene);
 
-// Temporary ambient light while assets load (optional)
+// Temporary ambient light while assets load
 const tempLight = new THREE.AmbientLight(0x404040, 0.3);
 scene.add(tempLight);
 
 // Load assets and initialize the rest
 let planets = [];
+let spaceship; // <-- Store the spaceship globally
+const keysPressed = { w: false, a: false, s: false, d: false };
+let spaceshipAngle = 0; // Angle for orbiting
 
 Promise.all([
     createSolarSystem(scene),
     loadSpaceship(scene)
-]).then(([{ sun, planets: loadedPlanets }, spaceship]) => {
+]).then(([{ sun, planets: loadedPlanets }, loadedSpaceship]) => {
     document.getElementById('loading').style.display = 'none';
-    
-    // Remove temporary light
+
+    // Remove temp light and add proper lighting
     scene.remove(tempLight);
-    
-    // Initialize proper lighting now that we have the sun
     initLighting(scene, sun);
-    
-    // Store planets for animation
+
     planets = loadedPlanets;
-    
-    // Initialize UI and start animation
+    // Create a pivot around the sun (0,0,0)
+    const spaceshipPivot = new THREE.Object3D();
+    scene.add(spaceshipPivot);
+
+    // Place the spaceship at an orbiting radius
+    loadedSpaceship.position.set(9, 0, 0);
+    spaceshipPivot.add(loadedSpaceship);
+
+    // Save references globally
+    spaceship = loadedSpaceship;
+    spaceship.userData.pivot = spaceshipPivot;
+
+
     initUI(scene, camera);
     animate();
+});
+
+// Key controls for WASD
+window.addEventListener('keydown', (e) => {
+    keysPressed[e.key.toLowerCase()] = true;
+});
+window.addEventListener('keyup', (e) => {
+    keysPressed[e.key.toLowerCase()] = false;
 });
 
 // Animation loop
 function animate() {
     requestAnimationFrame(animate);
-    updateCamera(camera); // Make sure to pass camera if needed
+
+    updateCamera(camera);
     planets.forEach(planet => planet.update());
     updateUI();
+
+    if (spaceship) {
+        const orbitSpeed = 0.02;
+        const moveYSpeed = 0.05;
+        const pivot = spaceship.userData.pivot;
+
+        // Orbit control (pivot rotation around Y axis)
+        if (keysPressed.a) pivot.rotation.y += orbitSpeed;
+        if (keysPressed.d) pivot.rotation.y -= orbitSpeed;
+
+        // Optional vertical orbit movement (Y-axis on spaceship itself)
+        if (keysPressed.w) pivot.rotation.x += orbitSpeed;
+        if (keysPressed.s) pivot.rotation.x -= orbitSpeed;
+
+
+        // Self-rotation (spin around own axis)
+        spaceship.rotation.y += 0.01;
+    }
+
     renderer.render(scene, camera);
 }
+
+
 
 // Window resize handler
 window.addEventListener('resize', () => {
