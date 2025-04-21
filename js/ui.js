@@ -1,3 +1,7 @@
+// This module for an interactive UI for the planet information
+// was planned but I could not implement it in time for the deadline.
+// I have included the code here for future reference.
+
 import * as THREE from '../lib/three.module.js';
 
 let planetInfoDiv;

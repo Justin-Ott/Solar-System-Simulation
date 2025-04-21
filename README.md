@@ -10,8 +10,7 @@ A 3D interactive model of our solar system built with Three.js and WebGL. Featur
 1. **Geometry Primitives**: Spheres for planets
 2. **Phong Shading**: Realistic lighting 
 3. **Interactions**: 
-   - Camera controls (orbit, zoom, pan) WIP
-   - Planet selection with info display WIP
+   - Camera controls (orbit, zoom, pan)
 4. **Imported 3D Model**: Spaceship model in GLTF format
 
 
@@ -19,10 +18,7 @@ A 3D interactive model of our solar system built with Three.js and WebGL. Featur
 - Left click + drag: Rotate view
 - Right click + drag: Pan view
 - Scroll: Zoom in/out
-- WASD: Move camera
-- Q/E: Zoom in/out
-- R: Reset view
-- Click planet: Show information
+- WASD: Move Spaceship
 
 ## Image Source
 - https://www.solarsystemscope.com/textures/ 

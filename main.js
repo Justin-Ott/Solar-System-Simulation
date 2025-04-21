@@ -1,6 +1,5 @@
 import * as THREE from './lib/three.module.js';
 
-// Local script imports
 import { initCamera, initCameraControls, updateCamera } from './js/camera.js';
 import { createStars } from './js/stars.js';
 import { initLighting } from './js/lighting.js';
@@ -26,12 +25,12 @@ scene.add(tempLight);
 
 // Load assets and initialize the rest
 let planets = [];
-let spaceship; // <-- Store the spaceship globally
+let spaceship;
+
 const keysPressed = { w: false, a: false, s: false, d: false };
-let spaceshipAngle = 0; // Angle for orbiting
 
 Promise.all([
-    createSolarSystem(scene),
+    createSolarSystem(scene, camera), // Pass camera to update positions 
     loadSpaceship(scene)
 ]).then(([{ sun, planets: loadedPlanets }, loadedSpaceship]) => {
     document.getElementById('loading').style.display = 'none';
@@ -41,6 +40,7 @@ Promise.all([
     initLighting(scene, sun);
 
     planets = loadedPlanets;
+
     // Create a pivot around the sun (0,0,0)
     const spaceshipPivot = new THREE.Object3D();
     scene.add(spaceshipPivot);
@@ -49,16 +49,13 @@ Promise.all([
     loadedSpaceship.position.set(9, 0, 0);
     spaceshipPivot.add(loadedSpaceship);
 
-    // Save references globally
     spaceship = loadedSpaceship;
     spaceship.userData.pivot = spaceshipPivot;
-
 
     initUI(scene, camera);
     animate();
 });
 
-// Key controls for WASD
 window.addEventListener('keydown', (e) => {
     keysPressed[e.key.toLowerCase()] = true;
 });
@@ -76,7 +73,6 @@ function animate() {
 
     if (spaceship) {
         const orbitSpeed = 0.02;
-        const moveYSpeed = 0.05;
         const pivot = spaceship.userData.pivot;
 
         // Orbit control (pivot rotation around Y axis)
@@ -87,17 +83,14 @@ function animate() {
         if (keysPressed.w) pivot.rotation.x += orbitSpeed;
         if (keysPressed.s) pivot.rotation.x -= orbitSpeed;
 
-
-        // Self-rotation (spin around own axis)
+        // Self-rotation (spin around own axis for some realism)
         spaceship.rotation.y += 0.01;
     }
 
     renderer.render(scene, camera);
 }
 
-
-
-// Window resize handler
+// Window resize handler felt like I needed this
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();

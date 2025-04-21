@@ -1,9 +1,9 @@
 import * as THREE from '../lib/three.module.js';
+
 export function createSolarSystem(scene, camera) {
     return new Promise((resolve) => {
         const textureLoader = new THREE.TextureLoader();
 
-        // Load all textures first
         Promise.all([
             loadTexture(textureLoader, 'assets/textures/mercury.jpg'),
             loadTexture(textureLoader, 'assets/textures/venus.jpg'),
@@ -23,7 +23,6 @@ export function createSolarSystem(scene, camera) {
                 jupiter, saturn, saturnRing, uranus, neptune, sunTex
             ] = textures;
 
-            // Sun
             const sunGeometry = new THREE.SphereGeometry(5, 64, 64);
             const sunMaterial = new THREE.MeshPhongMaterial({
                 map: sunTex,
@@ -35,25 +34,22 @@ export function createSolarSystem(scene, camera) {
             const sun = new THREE.Mesh(sunGeometry, sunMaterial);
             scene.add(sun);
 
-            // Create planets
             const mercuryObj = createPlanet(0.5, 7, 0.04, mercury);
             const venusObj = createPlanet(0.9, 10, 0.015, venus);
             const earthObj = createPlanet(1.0, 13, 0.01, earth, earthBump);
-            const moonObj = createPlanet(0.27, 1.5, 0.04, moon); // The moon as a planet-like object
+            const moonObj = createPlanet(0.27, 1.5, 0.04, moon); 
             const marsObj = createPlanet(0.8, 17, 0.008, mars);
             const jupiterObj = createPlanet(2.5, 24, 0.002, jupiter);
             const saturnObj = createPlanet(2.0, 30, 0.001, saturn);
             const uranusObj = createPlanet(1.5, 36, 0.0008, uranus);
             const neptuneObj = createPlanet(1.5, 42, 0.0005, neptune);
 
-            // Attach moon to Earth
+            // Moon is fake (Could not get this to work)
             earthObj.mesh.add(moonObj.group);  // Add moon to earth
             moonObj.group.position.x = 2; // Position moon relative to Earth
 
-            // Ensure moon is visible
             moonObj.group.scale.set(0.5, 0.5, 0.5); // Scale moon to make sure it's visible
 
-            // Add Saturn's rings
             const ringGeometry = new THREE.RingGeometry(2.3, 3.5, 64);
             const ringMaterial = new THREE.MeshBasicMaterial({
                 map: saturnRing,
@@ -64,7 +60,6 @@ export function createSolarSystem(scene, camera) {
             ring.rotation.x = Math.PI / 2;
             saturnObj.mesh.add(ring);
 
-            // Add planets to scene
             const planets = [
                 mercuryObj,
                 venusObj,
@@ -81,7 +76,6 @@ export function createSolarSystem(scene, camera) {
                 scene.add(planet.group);
             });
 
-            // Update function to animate the moon's orbit
             function update() {
                 planets.forEach(planet => planet.update());
 
@@ -121,7 +115,6 @@ function createPlanet(size, distance, speed, texture, bumpMap = null) {
     };
 }
 
-// Helper function to load textures with Promise
 function loadTexture(loader, url) {
     return new Promise((resolve, reject) => {
         loader.load(
